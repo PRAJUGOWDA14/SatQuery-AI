@@ -16,11 +16,11 @@ export const WorkflowSection: React.FC<WorkflowSectionProps> = ({ onStartAnalysi
       accent: 'text-blue-400',
       borderAccent: 'border-blue-500/40',
       bgGlow: 'from-blue-500/10',
-      shortDesc: 'Ingest raw satellite raster feeds or upload GeoTIFF / optical / SAR images.',
+      shortDesc: 'Upload satellite or aerial images for analysis.',
       technicalSpecs: [
-        'Supports GeoTIFF, COG, JPEG2000 & standard raster formats',
+        'Supports common image formats such as PNG, JPG, and TIFF',
         'Automatic coordinate reference system (CRS) detection',
-        'Multi-band alignment (VNIR, SWIR, thermal, SAR HH/HV)'
+        'RGB image processing'
       ]
     },
     {
@@ -34,7 +34,7 @@ export const WorkflowSection: React.FC<WorkflowSectionProps> = ({ onStartAnalysi
       technicalSpecs: [
         'Natural-language prompt understanding tailored for Earth observation',
         'Direct spatial questions: counting, segmentation & anomaly identification',
-        'Condition queries with temporal boundaries and spectral thresholds'
+        'Interpret natural-language analysis queries'
       ]
     },
     {
@@ -44,11 +44,11 @@ export const WorkflowSection: React.FC<WorkflowSectionProps> = ({ onStartAnalysi
       accent: 'text-purple-400',
       borderAccent: 'border-purple-500/40',
       bgGlow: 'from-purple-500/10',
-      shortDesc: 'Multimodal vision-language model fuses radiometric data with semantic prompts.',
+      shortDesc: 'Natural-language queries are routed to the available image-analysis functions.',
       technicalSpecs: [
-        'Cross-attention over spatial coordinate tokens and spectral bands',
-        'Zero-shot remote sensing feature extraction without manual re-training',
-        'Radiometric correction & radar backscatter calibration'
+        'Query-based task routing for supported image-analysis operations',
+        'Current prototype uses RGB image-processing techniques for basic estimates',
+        'Multispectral and SAR processing can be added as future modules'
       ]
     },
     {
@@ -58,11 +58,11 @@ export const WorkflowSection: React.FC<WorkflowSectionProps> = ({ onStartAnalysi
       accent: 'text-cyan-400',
       borderAccent: 'border-cyan-500/40',
       bgGlow: 'from-cyan-500/10',
-      shortDesc: 'Inspect geospatially grounded bounding boxes, masks, and quantitative metrics.',
+      shortDesc: 'Inspect the image, backend analysis results, and available visualization overlays.',
       technicalSpecs: [
-        'Precise latitude/longitude bounding polygons and segmentations',
-        'Exportable GeoJSON, Shapefile, and structured CSV reports',
-        'Interactive spectral false-color and vegetative index overlays'
+        'Backend-provided detections and overlays can be visualized when available',
+        'Analysis results can be presented through the existing results interface',
+        'Advanced geospatial and spectral overlays can be added in future versions'
       ]
     }
   ];
@@ -76,10 +76,10 @@ export const WorkflowSection: React.FC<WorkflowSectionProps> = ({ onStartAnalysi
           <div className="flex items-center justify-center gap-2 text-xs font-mono tracking-wider text-cyan-400 uppercase mb-3">
             <span>Workflow Architecture</span>
             <span className="text-slate-600" aria-hidden="true">·</span>
-            <span>4-Stage Orbital Pipeline</span>
+            <span>4-Stage Analysis Workflow</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white font-display">
-            From Raw Orbital Swath to Grounded Intelligence
+            From Uploaded Image to Analysis Results
           </h2>
           <p className="mt-3 text-base text-slate-300 leading-relaxed">
             A seamless four-step pipeline connecting Earth observation data with natural language reasoning.

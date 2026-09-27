@@ -3,100 +3,6 @@ import opticalImg from '../assets/images/multimodal_satellite_optical_1790235611
 import { API_BASE_URL } from './api';
 
 const STORAGE_KEY = 'satquery_analysis_history';
-const INITIALIZED_FLAG_KEY = 'satquery_history_initialized';
-
-/**
- * Default sample item conforming to the prompt specification:
- * Filename: "sentinel_scene_01.tif"
- * Query: "Identify water bodies"
- * Type: "Visual Analysis"
- * Status: "Completed"
- */
-function createInitialSampleItem(): HistoryItem {
-  const sampleResult: FinalAnalysisResult = {
-    query: 'Identify water bodies',
-    analysisType: 'Visual Analysis' as any,
-    image: {
-      file: new File([], 'sentinel_scene_01.tif', { type: 'image/tiff' }),
-      previewUrl: opticalImg,
-      filename: 'sentinel_scene_01.tif',
-      width: 1024,
-      height: 1024,
-      sizeBytes: 2048576,
-      formattedSize: '2.05 MB',
-    },
-    answer: 'Water body boundaries extracted with high NDWI contrast. Detected 3 primary surface water retention basins totaling 0.45 km².',
-    summary: 'Contiguous water bodies identified with 94% confidence. Zero sediment obstruction observed in main reservoir.',
-    confidence: 94,
-    detectedObjectsText: '3 Water Bodies',
-    areaText: '0.45 km²',
-    locationText: '12.9716° N, 77.5946° E',
-    latitude: 12.9716,
-    longitude: 77.5946,
-    area_km2: 0.45,
-    crs: 'EPSG:4326',
-    detections: [
-      {
-        id: 'det-water-01',
-        label: 'Primary Water Reservoir',
-        confidence: 96,
-        bbox: [24, 28, 28, 26],
-        coordinates: '12.9716° N, 77.5946° E',
-        latitude: 12.9716,
-        longitude: 77.5946,
-        area: '0.28 km²',
-        area_km2: 0.28,
-        geo_polygon: [
-          [12.9728, 77.5938],
-          [12.9734, 77.5955],
-          [12.9720, 77.5964],
-          [12.9706, 77.5950],
-          [12.9714, 77.5935],
-        ],
-        spectral_signature: 'High NDWI absorption, Low SWIR reflectance',
-      },
-      {
-        id: 'det-water-02',
-        label: 'Secondary Drainage Canal',
-        confidence: 91,
-        bbox: [58, 48, 24, 22],
-        coordinates: '12.9680° N, 77.5980° E',
-        latitude: 12.9680,
-        longitude: 77.5980,
-        area: '0.13 km²',
-        area_km2: 0.13,
-        geo_polygon: [
-          [12.9692, 77.5968],
-          [12.9692, 77.5992],
-          [12.9668, 77.5992],
-          [12.9668, 77.5968],
-        ],
-        spectral_signature: 'Contiguous boundary threshold 91.2%',
-      },
-    ],
-    metadata: {
-      model: 'SatQuery-Vision-v2.5',
-      inputType: 'Sentinel-2 GeoTIFF',
-      resolution: '10m GSD',
-      crs: 'EPSG:4326',
-      coordinates: '12.9716° N, 77.5946° E',
-      processingTimeMs: 1280,
-      analysisMethod: 'Multispectral Water Extraction',
-      timestamp: '2026-09-24 07:15 UTC',
-    },
-  };
-
-  return {
-    id: 'hist-sentinel-01',
-    filename: 'sentinel_scene_01.tif',
-    thumbnailUrl: opticalImg,
-    query: 'Identify water bodies',
-    analysisType: 'Visual Analysis',
-    date: 'Sep 24, 2026, 07:15 UTC',
-    status: 'Completed',
-    result: sampleResult,
-  };
-}
 
 /**
  * Fetch analysis history.
@@ -124,22 +30,12 @@ export async function getAnalysisHistory(): Promise<HistoryItem[]> {
   // 2. Load from localStorage
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    const hasInitialized = localStorage.getItem(INITIALIZED_FLAG_KEY);
 
     if (stored !== null) {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed)) {
         return parsed;
       }
-    }
-
-    // First time user loads app without any saved history
-    if (!hasInitialized) {
-      const initialItem = createInitialSampleItem();
-      const initialList = [initialItem];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialList));
-      localStorage.setItem(INITIALIZED_FLAG_KEY, 'true');
-      return initialList;
     }
 
     return [];
@@ -194,7 +90,6 @@ export async function saveAnalysisToHistory(result: FinalAnalysisResult): Promis
     // Prepend newest first
     const updated = [newItem, ...list.filter((item) => item.id !== newItem.id)];
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    localStorage.setItem(INITIALIZED_FLAG_KEY, 'true');
   } catch (err) {
     console.warn('[SatQuery History] Failed to write to localStorage:', err);
   }
@@ -219,7 +114,6 @@ export async function deleteAnalysisFromHistory(id: string): Promise<HistoryItem
     const list: HistoryItem[] = stored ? JSON.parse(stored) : [];
     const updated = list.filter((item) => item.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    localStorage.setItem(INITIALIZED_FLAG_KEY, 'true');
     return updated;
   } catch (err) {
     console.warn('[SatQuery History] Failed to delete from localStorage:', err);
@@ -233,7 +127,6 @@ export async function deleteAnalysisFromHistory(id: string): Promise<HistoryItem
 export function clearAllAnalysisHistory(): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-    localStorage.setItem(INITIALIZED_FLAG_KEY, 'true');
   } catch (err) {
     console.warn('[SatQuery History] Failed to clear history:', err);
   }

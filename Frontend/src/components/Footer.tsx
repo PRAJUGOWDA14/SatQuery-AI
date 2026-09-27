@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               SatQuery <span className="text-cyan-400">AI</span>
             </span>
             <span className="text-slate-600 text-xs ml-2">·</span>
-            <span className="text-xs text-slate-400">Remote Sensing Vision-Language Assistant</span>
+            <span className="text-xs text-slate-400">Remote Sensing Image Analysis Prototype</span>
           </div>
 
           {/* Links */}

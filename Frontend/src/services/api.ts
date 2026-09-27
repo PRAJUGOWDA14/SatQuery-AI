@@ -28,6 +28,18 @@ export interface GroundedDetection extends BackendDetection {
 }
 
 export interface AnalyzeResponseData {
+  success?: boolean;
+  task?: string;
+  analysis?: {
+    image_width: number;
+    image_height: number;
+    total_pixels: number;
+    vegetation_percentage: number;
+    water_percentage: number;
+    builtup_percentage: number;
+    bright_area_percentage: number;
+  };
+  image_url?: string;
   status?: 'success' | 'error';
   message?: string;
   analysis_type?: string;

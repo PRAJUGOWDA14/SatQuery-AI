@@ -346,7 +346,7 @@ export const GeospatialView: React.FC<GeospatialViewProps> = ({
                   <Compass className="w-3.5 h-3.5" />
                   <span>Geographic Coordinate Alignment</span>
                   <span className="text-slate-600">·</span>
-                  <span className="text-purple-300">EPSG:4326 (WGS84)</span>
+                  <span className="text-purple-300">Coordinates · Metadata Dependent</span>
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight text-white font-display">
                   Geospatial Analysis
@@ -725,7 +725,7 @@ export const GeospatialView: React.FC<GeospatialViewProps> = ({
               <div className="rounded-2xl p-4 glass-panel border border-white/10 bg-[#0a1020] text-xs font-mono text-slate-400 space-y-1.5">
                 <div className="flex justify-between">
                   <span>Spatial Reference:</span>
-                  <span className="text-slate-200 font-semibold">{result?.crs || 'EPSG:4326 (WGS84)'}</span>
+                  <span className="text-slate-200 font-semibold">{result?.crs || 'Not provided'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Raster Footprint:</span>

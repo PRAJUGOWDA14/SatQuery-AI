@@ -193,9 +193,9 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
   // Primary detection for Findings Section cards
   const primaryDetection = detections[0] || {};
-  const detectionLabel = primaryDetection.label || (query.toLowerCase().includes('water') ? 'Water body detected' : 'Target feature detected');
+  const detectionLabel = primaryDetection.label || 'No detected feature provided by backend';
   const detectionArea = primaryDetection.area ? String(primaryDetection.area) : areaText;
-  const detectionConfidence = primaryDetection.confidence !== undefined ? `${primaryDetection.confidence}%` : `${confidence}%`;
+  const detectionConfidence = primaryDetection.confidence !== undefined ? `${primaryDetection.confidence}%` : (confidence !== null ? `${confidence}%` : 'Not provided');
   const detectionCoordinates = primaryDetection.coordinates 
     ? (typeof primaryDetection.coordinates === 'object' ? `${primaryDetection.coordinates.lat}° N, ${primaryDetection.coordinates.lng}° E` : String(primaryDetection.coordinates))
     : locationText;
@@ -217,7 +217,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                   <Compass className="w-3.5 h-3.5 text-cyan-400" />
                   <span>Space-Tech Intelligence Console</span>
                   <span className="text-slate-600">·</span>
-                  <span>VLM Core</span>
+                  <span>Image Analysis Core</span>
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white font-display flex items-center gap-3">
                   <span>Analysis Results</span>
@@ -630,7 +630,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                     Confidence
                   </span>
                   <span className="text-sm sm:text-base font-bold text-emerald-400">
-                    {confidence}%
+                    {confidence !== null ? `${confidence}%` : 'Not provided'}
                   </span>
                 </div>
 
@@ -752,7 +752,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 {detectionLabel}
               </div>
               <span className="text-xs font-mono text-cyan-400">
-                Spatial Feature Vector
+                Backend detection result
               </span>
             </div>
 
@@ -765,7 +765,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 {detectionArea}
               </div>
               <span className="text-xs font-mono text-slate-400">
-                Calculated Metric Swath
+                Backend-provided area
               </span>
             </div>
 
@@ -778,7 +778,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 {detectionConfidence}
               </div>
               <span className="text-xs font-mono text-slate-400">
-                Multi-head Cross Attention
+                Backend-provided confidence
               </span>
             </div>
 
@@ -804,7 +804,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 {detectionCoordinates}
               </div>
               <span className="text-xs font-mono text-slate-400">
-                Geographic Reference (WGS84)
+                Backend-provided coordinates
               </span>
             </div>
 

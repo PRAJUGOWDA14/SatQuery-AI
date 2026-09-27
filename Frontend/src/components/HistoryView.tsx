@@ -75,49 +75,37 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
     // Fallback if result object was minimal
     const fallbackResult: FinalAnalysisResult = {
       query: item.query,
-      analysisType: (item.analysisType as any) || 'Visual Question Answering',
+      analysisType: (item.analysisType as any) || 'Auto Detect',
       image: {
         file: new File([], item.filename),
         previewUrl: item.thumbnailUrl,
         filename: item.filename,
-        width: 1024,
-        height: 1024,
-        sizeBytes: 1048576,
-        formattedSize: '1.0 MB',
+        width: 0,
+        height: 0,
+        sizeBytes: 0,
+        formattedSize: 'Not available',
       },
-      answer: `Analysis records for ${item.filename} resolved with query: "${item.query}".`,
-      summary: `Automated assessment conducted under ${item.analysisType} protocol.`,
-      confidence: 92,
-      detectedObjectsText: 'Resolved Feature Targets',
-      areaText: '0.45 km²',
-      locationText: '12.9716° N, 77.5946° E',
-      latitude: 12.9716,
-      longitude: 77.5946,
-      area_km2: 0.45,
-      crs: 'EPSG:4326',
-      detections: [
-        {
-          id: 'det-01',
-          label: 'Primary Feature Region',
-          confidence: 92,
-          bbox: [25, 25, 50, 50],
-          coordinates: '12.9716° N, 77.5946° E',
-          latitude: 12.9716,
-          longitude: 77.5946,
-          area: '0.45 km²',
-          area_km2: 0.45,
-        }
-      ],
+      answer: 'This history record does not contain the original backend analysis result.',
+      summary: 'Only the saved history metadata is available for this record.',
+      confidence: null,
+      detectedObjectsText: 'Not provided',
+      areaText: 'Not available',
+      locationText: 'Not available',
+      latitude: undefined,
+      longitude: undefined,
+      area_km2: undefined,
+      crs: 'Not provided',
+      detections: [],
       metadata: {
-        model: 'SatQuery-Vision-v2.5',
-        inputType: 'Satellite TIFF',
-        resolution: '10m GSD',
-        crs: 'EPSG:4326',
-        coordinates: '12.9716° N, 77.5946° E',
-        processingTimeMs: 1350,
-        analysisMethod: item.analysisType,
+        model: 'Not provided',
+        inputType: 'Not provided',
+        resolution: 'Not provided',
+        crs: 'Not provided',
+        coordinates: 'Not provided',
+        processingTimeMs: 0,
+        analysisMethod: 'Not provided',
         timestamp: item.date,
-      }
+      },
     };
 
     onViewResult(fallbackResult);
@@ -338,7 +326,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
                     {/* Sensor / Constellation Mini Badge (Top-Left) */}
                     <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/75 backdrop-blur-md border border-white/15 text-[10px] font-mono text-cyan-300 flex items-center gap-1">
                       <Satellite className="w-3 h-3 text-cyan-400" />
-                      <span>Sentinel-2</span>
+                      <span>Image Analysis</span>
                     </div>
                   </div>
 

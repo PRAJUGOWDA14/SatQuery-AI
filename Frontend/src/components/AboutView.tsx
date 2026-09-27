@@ -10,13 +10,13 @@ export const AboutView: React.FC = () => {
         <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase mb-2">
           <span>Mission & Technology</span>
           <span className="text-slate-600">·</span>
-          <span>Remote Sensing Vision-Language Assistant</span>
+          <span>Remote Sensing Image Analysis Prototype</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-display">
           SatQuery AI Architecture
         </h1>
         <p className="mt-3 text-base text-slate-300 leading-relaxed max-w-3xl">
-          SatQuery AI is built to bridge orbital sensor telemetry with foundational vision-language models, enabling analysts, environmental researchers, and geospatial engineers to query gigapixel Earth observation data using natural dialogue.
+          SatQuery AI is a prototype for natural-language image analysis of uploaded satellite or aerial imagery. User queries are routed to the available backend analysis functions, which currently use RGB image-processing techniques to estimate basic image properties such as water-like, vegetation, and built-up regions.
         </p>
       </div>
 
@@ -29,14 +29,14 @@ export const AboutView: React.FC = () => {
               <Radio className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-white font-display">
-              Multimodal Radiometric Ingestion
+              RGB Image Processing
             </h3>
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              Unlike consumer vision models limited to 8-bit RGB channels, SatQuery AI ingests high-dynamic range multispectral bands (Visible, Near-Infrared, Shortwave-Infrared, Thermal) and Synthetic Aperture Radar (SAR C-Band/X-Band) complex backscatter coefficients.
+              SatQuery AI currently analyzes uploaded RGB satellite or aerial imagery using image-processing techniques. The prototype is designed to support future multispectral and SAR analysis as additional processing modules are integrated.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t border-white/5 text-xs font-mono text-cyan-400">
-            Wavelength Range: 0.4 μm to 5.6 cm
+            Current Input: RGB Image
           </div>
         </div>
 
@@ -46,14 +46,14 @@ export const AboutView: React.FC = () => {
               <Compass className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-white font-display">
-              Sub-Pixel Spatial Grounding
+              Analysis Results & Overlays
             </h3>
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              Every identified feature is grounded directly into geographical coordinate frames (WGS84, UTM, EPSG). Detected bounding boxes and polygons maintain direct real-world metric dimensions (meters, hectares, square kilometers).
+              The results interface can display values and visualization data returned by the backend. Real-world coordinates, geospatial measurements, and object detections require appropriate image metadata and dedicated processing modules.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t border-white/5 text-xs font-mono text-purple-400">
-            Georeferenced Precision: 0.3m Ground Sampling Distance
+            Geospatial Metadata: Required for Real-World Measurements
           </div>
         </div>
 
@@ -63,14 +63,14 @@ export const AboutView: React.FC = () => {
               <Cpu className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-white font-display">
-              Zero-Shot Remote Sensing Reasoning
+              Query-Based Analysis
             </h3>
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              By aligning orbital imagery with foundational geospatial knowledge, SatQuery AI resolves complex queries (e.g. &ldquo;Measure parcel canopy moisture&rdquo; or &ldquo;Detect illegal anchorages outside harbor limits&rdquo;) without fine-tuning bespoke models for every object class.
+              Natural-language queries are routed to the analysis functions currently available in the backend. The prototype can recognize supported requests such as water, vegetation, built-up regions, area-related questions, and general image analysis.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t border-white/5 text-xs font-mono text-indigo-400">
-            Cross-Attention Over Spatial Coordinate Tokens
+            Query Router + Image Processing
           </div>
         </div>
 
@@ -80,14 +80,14 @@ export const AboutView: React.FC = () => {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="text-lg font-bold text-white font-display">
-              Bi-Temporal Change Analytics
+              Change Detection
             </h3>
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              Aligning multi-pass observation swaths across days, months, or decades to quantify surface alterations, infrastructure development, agricultural growth stages, and natural disaster impacts with high statistical confidence.
+              The backend can compare a before image with an after image and calculate the percentage of pixels that differ. This provides a basic image-level change estimate without assuming geospatial registration or satellite-specific metadata.
             </p>
           </div>
           <div className="mt-6 pt-4 border-t border-white/5 text-xs font-mono text-emerald-400">
-            Co-registration Error: &lt; 0.2 pixels
+            Change Estimate: Pixel Difference
           </div>
         </div>
 

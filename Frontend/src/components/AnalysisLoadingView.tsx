@@ -46,11 +46,12 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
   onComplete,
 }) => {
   const [progress, setProgress] = useState<number>(10);
-  const [activeMessage, setActiveMessage] = useState<string>('Initializing radiometric calibration and preprocessing...');
+  const [activeMessage, setActiveMessage] = useState<string>('Preparing image analysis...');
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(1); // 0-indexed: step 1 is index 1 ("Image preprocessing")
   const [logs, setLogs] = useState<string[]>([]);
   const isCancelledRef = useRef<boolean>(false);
   const completedHandledRef = useRef<boolean>(false);
+  const backendCompletedRef = useRef<boolean>(false);
 
   // If user opens this screen directly without an image, safely redirect
   useEffect(() => {
@@ -85,6 +86,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         .then((response: AnalyzeResponseData) => {
           if (isCancelledRef.current || completedHandledRef.current) return;
           addLog('200 OK received from backend /api/analyze');
+          backendCompletedRef.current = true;
           // When backend responds immediately with final response
           handleFinish(response);
         })
@@ -106,9 +108,11 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
       setProgress((prev) => {
         const next = prev + Math.floor(Math.random() * 8) + 6;
         if (next >= 100) {
-          clearInterval(interval);
-          handleFinish();
-          return 100;
+          if (backendCompletedRef.current) {
+            clearInterval(interval);
+            return 100;
+          }
+          return 99;
         }
 
         // Update step index based on progress
@@ -153,32 +157,36 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
       if (isCancelledRef.current || !uploadedImage) return;
 
       // Extract values dynamically from backend response if provided
-      const rawAnswer = backendData?.answer || backendData?.summary;
-      const defaultAnswer = query.toLowerCase().includes('water')
-        ? 'Detected water bodies in the image.'
-        : query.toLowerCase().includes('build') || query.toLowerCase().includes('urban')
-        ? 'Detected urban infrastructure and building complexes.'
-        : query.toLowerCase().includes('change')
-        ? 'Identified land-use shift and hydrological alterations.'
-        : `Identified remote-sensing spatial targets matching "${query}".`;
+      const answer =
+        backendData?.answer ||
+        backendData?.summary ||
+        'The backend did not provide an analysis result.';
 
-      const answer = rawAnswer || defaultAnswer;
+      const analysisData = backendData?.analysis;
+      let summary = backendData?.summary || backendData?.answer || `Analysis completed for the query "${query}".`;
 
-      const summary = backendData?.summary || backendData?.answer ||
-        `Comprehensive vision-language reasoning executed over satellite raster swath. Identified spatial signatures matching the query directive "${query}". Analysis confirms distinct radiometric contrast in optical/multispectral bands with high localization confidence.`;
+      if (analysisData) {
+        if (analysisType === 'Auto Detect') {
+          summary = `Water: ${analysisData.water_percentage.toFixed(2)}% • Built-up: ${analysisData.builtup_percentage.toFixed(2)}% • Vegetation: ${analysisData.vegetation_percentage.toFixed(2)}% • Bright areas: ${analysisData.bright_area_percentage.toFixed(2)}%`;
+        } else if (analysisType === 'Land Cover Analysis') {
+          summary = `Water: ${analysisData.water_percentage.toFixed(2)}% • Built-up: ${analysisData.builtup_percentage.toFixed(2)}% • Vegetation: ${analysisData.vegetation_percentage.toFixed(2)}% • Bright areas: ${analysisData.bright_area_percentage.toFixed(2)}%`;
+        } else if (analysisType === 'Object Detection' || analysisType === 'Visual Question Answering' || analysisType === 'Spectral Analysis' || analysisType === 'Change Detection') {
+          summary = backendData?.answer || backendData?.summary || summary;
+        }
+      }
 
       // Confidence normalization (e.g. 0.92 -> 92 or 92 -> 92)
-      let rawConfidence = backendData?.confidence;
-      if (rawConfidence !== undefined) {
+      let rawConfidence: number | null = backendData?.confidence ?? null;
+      if (rawConfidence !== null) {
         if (rawConfidence <= 1 && rawConfidence > 0) {
           rawConfidence = Math.round(rawConfidence * 100);
         }
       } else {
-        rawConfidence = 92;
+        rawConfidence = null;
       }
 
       // Format area
-      let areaText = '~0.45 km²';
+      let areaText = 'Not available — image has no geospatial scale';
       if (backendData?.area) {
         if (typeof backendData.area === 'object' && 'value' in backendData.area) {
           areaText = `${backendData.area.value} ${backendData.area.unit || 'km²'}`;
@@ -188,7 +196,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
       }
 
       // Format location / coordinates
-      let locationText = '12.9716° N, 77.5946° E';
+      let locationText = 'Not available — image has no location metadata';
       if (backendData?.location) {
         locationText = backendData.location;
       } else if (backendData?.coordinates) {
@@ -200,7 +208,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
       }
 
       // Format detected objects
-      let detectedObjectsText = 'Water Bodies: 3';
+      let detectedObjectsText = 'No object detections provided by backend';
       if (backendData?.detected_objects) {
         if (typeof backendData.detected_objects === 'object') {
           detectedObjectsText = Object.entries(backendData.detected_objects)
@@ -211,77 +219,12 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         }
       } else if (backendData?.detections && backendData.detections.length > 0) {
         detectedObjectsText = `Targets Identified: ${backendData.detections.length}`;
-      } else if (!query.toLowerCase().includes('water')) {
-        detectedObjectsText = 'Features: 4';
+      } else {
+        detectedObjectsText = 'No object detections provided by backend';
       }
 
       // Detections array with overlays (bounding boxes, masks, points, highlights)
-      const detections: BackendDetection[] = backendData?.detections && backendData.detections.length > 0
-        ? backendData.detections
-        : [
-            {
-              id: 'DET-01',
-              label: query.toLowerCase().includes('water') ? 'Primary Water Body' : 'Target Feature Alpha',
-              type: 'mask',
-              confidence: 94,
-              bbox: [24, 28, 28, 26],
-              coordinates: locationText,
-              area: '0.28 km²',
-              area_km2: 0.28,
-              latitude: 12.9716,
-              longitude: 77.5946,
-              mask_polygon: [
-                [26, 30], [38, 28], [51, 35], [48, 52], [32, 54], [25, 42]
-              ],
-              geo_polygon: [
-                [12.9728, 77.5938],
-                [12.9734, 77.5955],
-                [12.9720, 77.5964],
-                [12.9706, 77.5950],
-                [12.9714, 77.5935]
-              ],
-              spectral_signature: 'High NDWI absorption, Low SWIR reflectance',
-            },
-            {
-              id: 'DET-02',
-              label: query.toLowerCase().includes('water') ? 'Retention Basin' : 'Spatial Zone Beta',
-              type: 'bbox',
-              confidence: 91,
-              bbox: [58, 48, 24, 22],
-              coordinates: '12.9680° N, 77.5980° E',
-              area: '0.13 km²',
-              area_km2: 0.13,
-              latitude: 12.9680,
-              longitude: 77.5980,
-              geo_polygon: [
-                [12.9692, 77.5968],
-                [12.9692, 77.5992],
-                [12.9668, 77.5992],
-                [12.9668, 77.5968]
-              ],
-              spectral_signature: 'Contiguous boundary threshold 91.2%',
-            },
-            {
-              id: 'DET-03',
-              label: 'Monitoring Anchor Point',
-              type: 'point',
-              confidence: 95,
-              bbox: [42, 65, 8, 8],
-              coordinates: '12.9730° N, 77.5910° E',
-              area: '0.04 km²',
-              area_km2: 0.04,
-              latitude: 12.9730,
-              longitude: 77.5910,
-              geo_polygon: [
-                [12.9738, 77.5902],
-                [12.9738, 77.5918],
-                [12.9722, 77.5918],
-                [12.9722, 77.5902]
-              ],
-              spectral_signature: 'Centroid Reference Point',
-            }
-          ];
-
+      const detections: BackendDetection[] = backendData?.detections ?? [];
       const finalResult: FinalAnalysisResult = {
         query,
         analysisType,
@@ -293,20 +236,20 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         detectedObjectsText,
         areaText,
         locationText,
-        latitude: backendData?.latitude ?? (backendData?.coordinates && typeof backendData.coordinates === 'object' ? backendData.coordinates.lat : 12.9716),
-        longitude: backendData?.longitude ?? (backendData?.coordinates && typeof backendData.coordinates === 'object' ? backendData.coordinates.lng : 77.5946),
-        area_km2: backendData?.area_km2 ?? 0.45,
-        crs: backendData?.crs || backendData?.metadata?.crs || 'EPSG:4326',
+        latitude: backendData?.latitude ?? (backendData?.coordinates && typeof backendData.coordinates === 'object' ? backendData.coordinates.lat : undefined),
+        longitude: backendData?.longitude ?? (backendData?.coordinates && typeof backendData.coordinates === 'object' ? backendData.coordinates.lng : undefined),
+        area_km2: backendData?.area_km2 ?? undefined,
+        crs: backendData?.crs || backendData?.metadata?.crs || 'Not provided',
         overlayUrl: backendData?.overlay_url,
         detections,
         metadata: {
-          model: backendData?.metadata?.model || 'SatQuery-VLM-SpaceTech v2.4',
+          model: backendData?.metadata?.model || 'Basic Image Analysis Pipeline',
           inputType: backendData?.metadata?.input_type || `${uploadedImage.filename.split('.').pop()?.toUpperCase()} Satellite Raster`,
-          resolution: backendData?.metadata?.resolution || '10m Ground Sampling Distance (GSD)',
-          crs: backendData?.metadata?.crs || 'EPSG:4326 (WGS84) / UTM Zone 43N',
+          resolution: backendData?.metadata?.resolution || 'Not provided',
+          crs: backendData?.metadata?.crs || 'Not provided',
           coordinates: locationText,
-          processingTimeMs: backendData?.metadata?.processing_time_ms || 2840,
-          analysisMethod: backendData?.metadata?.analysis_method || `${analysisType} Multi-Head Cross-Attention`,
+          processingTimeMs: backendData?.metadata?.processing_time_ms || 0,
+          analysisMethod: backendData?.metadata?.analysis_method || 'Pixel-level image analysis',
           timestamp: backendData?.metadata?.timestamp || new Date().toISOString(),
         },
       };
@@ -334,7 +277,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
             <div>
               <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 tracking-wider uppercase mb-1">
                 <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                <span>ISRO / Space-Tech Orbital Telemetry</span>
+                <span>Image Analysis Pipeline</span>
                 <span className="text-slate-600">·</span>
                 <span>Active Task</span>
               </div>
@@ -412,7 +355,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
                 {/* Subtle Coordinate Grid Overlay */}
                 <div className="absolute inset-0 sat-grid-bg opacity-35 pointer-events-none" />
 
-                {/* Subtle Radar Scanning Beam Animation */}
+                {/* Subtle Analysis Scan Animation */}
                 <div className="absolute inset-0 pointer-events-none overflow-hidden">
                   <div className="w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_18px_rgba(34,211,238,0.9)] animate-radar-sweep" />
                 </div>
@@ -426,7 +369,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
                 {/* Live Processing Tag */}
                 <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-black/80 backdrop-blur-md border border-white/20 text-[11px] font-mono text-cyan-300 flex items-center gap-2">
                   <Compass className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>Scanning GeoTIFF Radiometry & Tensor Swath...</span>
+                  <span>Analyzing uploaded image...</span>
                 </div>
               </div>
 

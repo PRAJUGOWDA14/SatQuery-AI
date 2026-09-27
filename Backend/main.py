@@ -70,7 +70,8 @@ def health():
 @app.post("/api/analyze")
 async def analyze(
     image: UploadFile = File(...),
-    query: str = Form(...)
+    query: str = Form(...),
+    analysis_type: str = Form("Auto Detect")
 ):
 
     if not image.content_type:
@@ -115,7 +116,20 @@ async def analyze(
         )
 
     # Decide which analysis the user requested
-    task = route_query(query)
+    if analysis_type == "Auto Detect":
+        task = route_query(query)
+    elif analysis_type == "Change Detection":
+        task = "change_detection"
+    elif analysis_type == "Visual Question Answering":
+        task = "vqa_unavailable"
+    elif analysis_type == "Object Detection":
+        task = "object_detection_unavailable"
+    elif analysis_type == "Land Cover Analysis":
+        task = "land_cover_unavailable"
+    elif analysis_type == "Spectral Analysis":
+        task = "spectral_analysis_unavailable"
+    else:
+        task = route_query(query)
 
     # Analyze the uploaded image
     analysis = analyze_image(file_path)
@@ -149,6 +163,14 @@ async def analyze(
         )
 
 
+    elif task == "change_detection":
+
+        answer = (
+            "Change detection requires a before image and an after image. "
+            "Use the change-detection analysis with two images."
+        )
+
+
     elif task == "area_analysis":
 
         answer = (
@@ -158,11 +180,46 @@ async def analyze(
         )
 
 
+    elif task == "vqa_unavailable":
+
+        answer = (
+            "Visual Question Answering is not implemented "
+            "in the current backend yet."
+        )
+
+
+    elif task == "object_detection_unavailable":
+
+        answer = (
+            "Object detection is not implemented "
+            "in the current backend yet."
+        )
+
+
+    elif task == "land_cover_unavailable":
+
+        answer = (
+            "Land cover analysis is not implemented "
+            "in the current backend yet."
+        )
+
+
+    elif task == "spectral_analysis_unavailable":
+
+        answer = (
+            "Spectral analysis is not implemented "
+            "in the current backend yet."
+        )
+
+
     else:
 
         answer = (
-            "The image has been analyzed using the "
-            "SatQuery AI image-analysis pipeline."
+            f"Image analysis results: "
+            f"water {analysis['water_percentage']}%, "
+            f"built-up {analysis['builtup_percentage']}%, "
+            f"vegetation {analysis['vegetation_percentage']}%, "
+            f"and bright areas {analysis['bright_area_percentage']}%."
         )
 
 

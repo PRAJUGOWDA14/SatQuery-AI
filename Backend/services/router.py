@@ -11,6 +11,15 @@ def route_query(query: str) -> str:
         return "change_detection"
 
     if any(word in q for word in [
+        "built up area",
+        "built-up area",
+        "builtup area",
+        "urban area",
+        "building area"
+    ]):
+        return "builtup_analysis"
+
+    if any(word in q for word in [
         "area",
         "acres",
         "hectares",

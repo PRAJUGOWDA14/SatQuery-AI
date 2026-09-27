@@ -69,7 +69,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
       file.type.startsWith('image/');
 
     if (!isValidFormat) {
-      setValidationError('Unsupported file format. Please upload GeoTIFF, TIFF, PNG, or JPG.');
+      setValidationError('Unsupported file format. Please upload PNG, JPG, TIFF.');
       return;
     }
 
@@ -185,7 +185,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                 <Globe className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Space-Tech Remote Sensing Console</span>
                 <span className="text-slate-600">·</span>
-                <span>VLM Core</span>
+                <span>Image Analysis Core</span>
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white font-display">
                 Satellite Image Analysis
@@ -287,7 +287,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                     Supported formats:
                   </span>
                   <span className="text-xs font-mono text-cyan-300 font-semibold mt-1 block">
-                    GeoTIFF, TIFF, PNG, JPG
+                    PNG, JPG, TIFF
                   </span>
                 </div>
               </div>
@@ -364,35 +364,35 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
               <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleLoadSample(opticalSampleImg, 'Sentinel-2_Agri_Delta.jpg')}
+                  onClick={() => handleLoadSample(opticalSampleImg, 'RGB_Agriculture_Sample.jpg')}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group"
                 >
                   <div className="text-xs font-semibold text-white truncate group-hover:text-cyan-300">
-                    Multispectral
+                    RGB Sample
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400">Sentinel-2 MSI</div>
+                  <div className="text-[10px] font-mono text-slate-400">RGB Image Sample</div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleLoadSample(sarSampleImg, 'Sentinel-1_Harbor_SAR.jpg')}
+                  onClick={() => handleLoadSample(sarSampleImg, 'Radar_Harbor_Sample.jpg')}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group"
                 >
                   <div className="text-xs font-semibold text-white truncate group-hover:text-cyan-300">
-                    C-SAR Radar
+                    Radar Sample
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400">Sentinel-1 IW</div>
+                  <div className="text-[10px] font-mono text-slate-400">Radar Image Sample</div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleLoadSample(changeSampleImg, 'Landsat-9_Reservoir_Waterline.jpg')}
+                  onClick={() => handleLoadSample(changeSampleImg, 'Satellite_Change_Sample.jpg')}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-left transition-all cursor-pointer group"
                 >
                   <div className="text-xs font-semibold text-white truncate group-hover:text-cyan-300">
                     Change Detection
                   </div>
-                  <div className="text-[10px] font-mono text-slate-400">Landsat-9 OLI</div>
+                  <div className="text-[10px] font-mono text-slate-400">Satellite Image Sample</div>
                 </button>
               </div>
             </div>

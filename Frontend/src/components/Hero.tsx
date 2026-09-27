@@ -75,11 +75,11 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onOpenDemo }) => {
         {/* Subtle coordinate markers */}
         <div className="absolute top-8 left-8 hidden lg:flex items-center gap-2 text-xs font-mono text-cyan-400/60 tabular-nums">
           <Crosshair className="w-3.5 h-3.5" />
-          <span>LEO SUN-SYNC 98.2° INC · 705 KM</span>
+          <span>REMOTE SENSING IMAGE ANALYSIS</span>
         </div>
         <div className="absolute bottom-8 right-8 hidden lg:flex items-center gap-2 text-xs font-mono text-purple-400/60 tabular-nums">
           <Radar className="w-3.5 h-3.5" />
-          <span>SPECTRAL SWATH: 290 KM · RESOLUTION: 0.3-10M</span>
+          <span>IMAGE PROCESSING · RGB ANALYSIS</span>
         </div>
       </div>
 
@@ -89,9 +89,9 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onOpenDemo }) => {
         {/* Subtle Top Metadata / Category Note (Clean unboxed text, no pills) */}
         <div className="flex items-center gap-2 text-xs md:text-sm font-medium text-cyan-400/90 mb-6 tracking-wider uppercase font-mono">
           <Globe className="w-4 h-4 text-cyan-400" />
-          <span>Multimodal Remote Sensing Intelligence</span>
+          <span>Remote Sensing Image Analysis</span>
           <span className="text-slate-600" aria-hidden="true">·</span>
-          <span className="text-purple-400">Vision-Language Architecture</span>
+          <span className="text-purple-400">Natural-Language Querying</span>
         </div>
 
         {/* Primary Heading */}
@@ -123,26 +123,26 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onOpenDemo }) => {
           </button>
         </div>
 
-        {/* Trust & Sensor Constellation Strip (No fake pills, clean typographic notation) */}
+        {/* Analysis Capabilities Strip (No fake pills, clean typographic notation) */}
         <div className="mt-14 pt-8 border-t border-white/10 w-full max-w-3xl flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-slate-400 font-mono">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-            <span>Sentinel-1/2 (Copernicus)</span>
+            <span>RGB Image Processing</span>
           </div>
           <span className="text-slate-600" aria-hidden="true">·</span>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-            <span>Landsat-8/9 (USGS/NASA)</span>
+            <span>Water / Vegetation Estimates</span>
           </div>
           <span className="text-slate-600" aria-hidden="true">·</span>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-            <span>PlanetScope 3m Constellation</span>
+            <span>Built-up Region Estimates</span>
           </div>
           <span className="text-slate-600" aria-hidden="true">·</span>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>Synthetic Aperture Radar (SAR)</span>
+            <span>Basic Change Detection</span>
           </div>
         </div>
 

@@ -39,7 +39,7 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
             <div className="relative w-full h-32 mb-5 rounded-xl overflow-hidden bg-slate-950 border border-white/10">
               <img
                 src={opticalImg}
-                alt="Multimodal satellite optical and multispectral imagery"
+                alt="RGB satellite or aerial imagery"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
               />
@@ -48,7 +48,7 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
                 <Layers className="w-4 h-4" />
               </div>
               <div className="absolute bottom-2.5 left-2.5 text-[11px] font-mono text-cyan-300">
-                <span>VNIR · SWIR · C-SAR</span>
+                <span>RGB Image Processing</span>
               </div>
             </div>
 
@@ -60,12 +60,12 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
             </div>
 
             <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-              Analyze optical, multispectral and SAR imagery.
+              Analyze uploaded images using RGB image processing.
             </p>
           </div>
 
           <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Sensors: Sentinel, Landsat</span>
+            <span>Image sources: User Uploads</span>
             <span className="text-cyan-400 group-hover:translate-x-0.5 transition-transform">Explore →</span>
           </div>
         </div>
@@ -109,7 +109,7 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
           </div>
         </div>
 
-        {/* Card 3: Spatial Grounding */}
+        {/* Card 3: Image-Based Analysis */}
         <div
           onClick={() => onSelectFeature('SAR')}
           className="group relative rounded-2xl p-6 glass-panel glass-panel-hover flex flex-col justify-between cursor-pointer border border-white/10 hover:border-purple-500/40"
@@ -119,7 +119,7 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
             <div className="relative w-full h-32 mb-5 rounded-xl overflow-hidden bg-slate-950 border border-white/10">
               <img
                 src={sarImg}
-                alt="SAR radar backscatter spatial grounding"
+                alt="Radar image sample"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-75 group-hover:opacity-90"
               />
@@ -128,13 +128,13 @@ export const FeatureCards: React.FC<FeatureCardsProps> = ({ onSelectFeature }) =
                 <Compass className="w-4 h-4" />
               </div>
               <div className="absolute bottom-2.5 left-2.5 text-[11px] font-mono text-purple-300">
-                <span>WGS84 · UTM 31T · EPSG:4326</span>
+                <span>Image coordinates: Not provided</span>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-white font-display group-hover:text-purple-300 transition-colors">
-                Spatial Grounding
+                Image-Based Analysis
               </h3>
               <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400 transition-colors" />
             </div>

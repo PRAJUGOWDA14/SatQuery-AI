@@ -69,7 +69,7 @@ export interface FinalAnalysisResult {
   // Normalized accessible fields
   answer: string;
   summary: string;
-  confidence: number;
+  confidence: number | null;
   detectedObjectsText: string;
   areaText: string;
   locationText: string;
@@ -118,7 +118,7 @@ export interface SatelliteSample {
 export interface GroundedObject {
   id: string;
   label: string;
-  confidence: number;
+  confidence: number | null;
   bbox: [number, number, number, number]; // [x%, y%, width%, height%]
   coordinates: string;
   areaEstimate?: string;

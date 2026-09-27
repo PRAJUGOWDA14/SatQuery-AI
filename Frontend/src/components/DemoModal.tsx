@@ -55,7 +55,7 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onNavigat
               <div className="flex items-center gap-2 text-xs font-mono text-cyan-400">
                 <span>Interactive Interactive Demonstration</span>
                 <span className="text-slate-600">·</span>
-                <span>Sentinel-1 C-SAR IW Mode</span>
+                <span>Radar Image Sample</span>
               </div>
               <h3 className="text-lg font-bold text-white font-display">
                 Maritime Vessel Grounding & Length Estimation
@@ -91,12 +91,12 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onNavigat
             <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/15 bg-slate-950">
               <img
                 src={sarImg}
-                alt="SAR radar satellite imagery sample"
+                alt="Radar image sample"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
 
-              {/* Spatial Grounding Overlays */}
+              {/* Image Analysis Overlay */}
               {activeLayer === 'grounding' && (
                 <>
                   {mockDetections.map((det, idx) => {
@@ -148,14 +148,14 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onNavigat
                     activeLayer === 'sar' ? 'bg-cyan-500 text-slate-950' : 'text-slate-300 hover:text-white'
                   }`}
                 >
-                  Raw SAR
+                  Analysis Sample
                 </button>
               </div>
             </div>
 
             {/* Micro telemetry footer */}
             <div className="mt-4 flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>CRS: EPSG:4326 (WGS84)</span>
+              <span>Coordinates: Not provided</span>
               <span>Polarization: VV + VH Cross-Pol</span>
               <span className="text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Model Inferred

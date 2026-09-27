@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Save, Check, Key, Sliders, Globe, Shield, RefreshCw } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
-  const [crs, setCrs] = useState('EPSG:4326');
+  const [crs, setCrs] = useState('not-provided');
   const [measurementUnit, setMeasurementUnit] = useState('metric');
-  const [defaultSensor, setDefaultSensor] = useState('Sentinel-2');
+  const [defaultSensor, setDefaultSensor] = useState('RGB Image');
   const [autoEnhanceRadiometry, setAutoEnhanceRadiometry] = useState(true);
   const [cacheTiles, setCacheTiles] = useState(true);
   const [savedNotice, setSavedNotice] = useState(false);
@@ -49,14 +49,14 @@ export const SettingsView: React.FC = () => {
             <span>Coordinate Reference System (CRS)</span>
           </h3>
           <p className="text-xs text-slate-400 mb-4">
-            Specify the default projection used for grounded spatial bounding vectors and GeoJSON export payloads.
+            Coordinate reference information is only available when provided by the uploaded image or backend analysis.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { id: 'EPSG:4326', name: 'WGS 84 (EPSG:4326)', desc: 'Standard geographic lat/lon degrees' },
-              { id: 'EPSG:3857', name: 'Web Mercator (EPSG:3857)', desc: 'Spherical mercator for web maps' },
-              { id: 'UTM:AUTO', name: 'Auto UTM Zone (Universal)', desc: 'Meter-based conformal transverse projection' }
+              { id: 'not-provided', name: 'Not provided', desc: 'Use metadata supplied with the image' },
+              { id: 'image-metadata', name: 'Image Metadata', desc: 'Use available image coordinate information' },
+              { id: 'none', name: 'No CRS', desc: 'Do not assume a coordinate reference system' }
             ].map(item => (
               <button
                 key={item.id}
@@ -84,18 +84,16 @@ export const SettingsView: React.FC = () => {
           <div className="space-y-4 mt-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/5">
               <div>
-                <span className="text-sm font-medium text-white">Default Constellation Feed</span>
-                <p className="text-xs text-slate-400">Preferred provider when loading unassigned geographic coordinates</p>
+                <span className="text-sm font-medium text-white">Default Image Processing</span>
+                <p className="text-xs text-slate-400">Default image-processing mode for uploaded images</p>
               </div>
               <select
                 value={defaultSensor}
                 onChange={(e) => setDefaultSensor(e.target.value)}
                 className="bg-black/50 border border-white/15 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-400"
               >
-                <option value="Sentinel-2">Sentinel-2 MSI (ESA Copernicus)</option>
-                <option value="Landsat-9">Landsat-9 OLI-2 (USGS/NASA)</option>
-                <option value="Sentinel-1">Sentinel-1 C-SAR (Radar)</option>
-                <option value="PlanetScope">PlanetScope 3m Constellation</option>
+                <option value="RGB Image">RGB Image Processing</option>
+                <option value="General Image">General Image Analysis</option>
               </select>
             </div>
 
@@ -126,8 +124,8 @@ export const SettingsView: React.FC = () => {
 
             <div className="flex items-center justify-between gap-2">
               <div>
-                <span className="text-sm font-medium text-white">Automatic Radiometric Histogram Stretch</span>
-                <p className="text-xs text-slate-400">Dynamic range contrast adjustment for raw 12-bit/16-bit raster files</p>
+                <span className="text-sm font-medium text-white">Automatic Image Enhancement</span>
+                <p className="text-xs text-slate-400">Apply basic visual enhancement when supported by the image-processing pipeline</p>
               </div>
               <input
                 type="checkbox"
