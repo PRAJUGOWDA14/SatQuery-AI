@@ -188,7 +188,8 @@ async def analyze(
                 file_path,
                 query
             )
-        except Exception:
+        except Exception as e:
+            print(f"Gemini error: {e}")
             answer = (
                 f"Image analysis results: "
                 f"water {analysis['water_percentage']}%, "
@@ -229,7 +230,8 @@ async def analyze(
                 file_path,
                 query
             )
-        except Exception:
+        except Exception as e:
+            print(f"Gemini error: {e}")
             answer = (
                 f"Image analysis results: "
                 f"water {analysis['water_percentage']}%, "
