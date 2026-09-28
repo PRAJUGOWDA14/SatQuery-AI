@@ -28,7 +28,7 @@ def analyze_image_with_gemini(image_path: str, query: str) -> str:
 
     last_error = None
 
-    for model in ("gemini-3.8-flash", "gemini-3.7-flash"):
+    for model in ("gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite"):
         try:
             response = client.models.generate_content(
                 model=model,
