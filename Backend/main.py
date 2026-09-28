@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from services.router import route_query
 from services.image_analysis import analyze_image
+from services.gemini_service import analyze_image_with_gemini
 from services.change_detection import detect_change
 
 
@@ -182,10 +183,19 @@ async def analyze(
 
     elif task == "vqa_unavailable":
 
-        answer = (
-            "Visual Question Answering is not implemented "
-            "in the current backend yet."
-        )
+        try:
+            answer = analyze_image_with_gemini(
+                file_path,
+                query
+            )
+        except Exception:
+            answer = (
+                f"Image analysis results: "
+                f"water {analysis['water_percentage']}%, "
+                f"built-up {analysis['builtup_percentage']}%, "
+                f"vegetation {analysis['vegetation_percentage']}%, "
+                f"and bright areas {analysis['bright_area_percentage']}%."
+            )
 
 
     elif task == "object_detection_unavailable":
@@ -214,13 +224,19 @@ async def analyze(
 
     else:
 
-        answer = (
-            f"Image analysis results: "
-            f"water {analysis['water_percentage']}%, "
-            f"built-up {analysis['builtup_percentage']}%, "
-            f"vegetation {analysis['vegetation_percentage']}%, "
-            f"and bright areas {analysis['bright_area_percentage']}%."
-        )
+        try:
+            answer = analyze_image_with_gemini(
+                file_path,
+                query
+            )
+        except Exception:
+            answer = (
+                f"Image analysis results: "
+                f"water {analysis['water_percentage']}%, "
+                f"built-up {analysis['builtup_percentage']}%, "
+                f"vegetation {analysis['vegetation_percentage']}%, "
+                f"and bright areas {analysis['bright_area_percentage']}%."
+            )
 
 
     return {
