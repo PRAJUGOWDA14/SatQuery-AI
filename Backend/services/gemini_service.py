@@ -19,7 +19,7 @@ def analyze_image_with_gemini(image_path: str, query: str) -> str:
     mime_type = mimetypes.guess_type(image_path)[0] or "image/jpeg"
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.8-flash",
         contents=[
             types.Part.from_bytes(
                 data=image_bytes,
