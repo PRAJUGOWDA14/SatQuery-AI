@@ -1,9 +1,11 @@
 import os
 import mimetypes
 
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+load_dotenv()
 
 def analyze_image_with_gemini(image_path: str, query: str) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
@@ -28,7 +30,7 @@ def analyze_image_with_gemini(image_path: str, query: str) -> str:
 
     last_error = None
 
-    for model in ("gemini-3.8-flash", "gemini-3.7-flash", "gemini-3.5-flash-lite"):
+    for model in ( "gemini-3.5-flash-lite",):
         try:
             response = client.models.generate_content(
                 model=model,
