@@ -124,7 +124,7 @@ async def analyze(
     elif analysis_type == "Visual Question Answering":
         task = "vqa_unavailable"
     elif analysis_type == "Object Detection":
-        task = "object_detection_unavailable"
+        task = "object_detection"
     elif analysis_type == "Land Cover Analysis":
         task = "land_cover_unavailable"
     elif analysis_type == "Spectral Analysis":
@@ -199,11 +199,24 @@ async def analyze(
             )
 
 
-    elif task == "object_detection_unavailable":
+    elif task == "object_detection":
 
-        answer = (
-            "Object detection is not implemented "
-            "in the current backend yet."
+        answer = analyze_image_with_gemini(
+            file_path,
+            """Analyze this satellite or aerial image for object detection.
+
+Identify the visible objects and structures such as:
+- buildings
+- roads
+- vehicles
+- water bodies
+- trees or vegetation
+- agricultural fields
+- bridges
+- other clearly visible man-made or natural objects
+
+Return a concise list of detected objects. Do not invent objects that are not clearly visible.
+For each object type, briefly describe where it appears in the image."""
         )
 
 

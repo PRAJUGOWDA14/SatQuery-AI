@@ -53,4 +53,13 @@ def route_query(query: str) -> str:
     ]):
         return "builtup_analysis"
 
+    if any(word in q for word in [
+        "detect objects",
+        "object detection",
+        "objects",
+        "what objects",
+        "identify objects",
+        "find objects"
+    ]):
+        return "object_detection"
     return "general_analysis"
