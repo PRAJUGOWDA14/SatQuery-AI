@@ -749,44 +749,49 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            {/* CARD 1: Detection */}
-            <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
-                Detection
-              </span>
-              <div className="text-lg font-bold text-white mb-1">
-                {detectionLabel}
-              </div>
-              <span className="text-xs font-mono text-cyan-400">
-                Backend detection result
-              </span>
-            </div>
+            {/* STANDARD ANALYSIS CARDS */}
+            {changePercentage === undefined && (
+              <>
+                {/* CARD 1: Detection */}
+                <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
+                    Detection
+                  </span>
+                  <div className="text-lg font-bold text-white mb-1">
+                    {detectionLabel}
+                  </div>
+                  <span className="text-xs font-mono text-cyan-400">
+                    Backend detection result
+                  </span>
+                </div>
 
-            {/* CARD 2: Area */}
-            <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
-                Area
-              </span>
-              <div className="text-lg font-bold text-cyan-300 mb-1">
-                {detectionArea}
-              </div>
-              <span className="text-xs font-mono text-slate-400">
-                Backend-provided area
-              </span>
-            </div>
+                {/* CARD 2: Area */}
+                <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
+                    Area
+                  </span>
+                  <div className="text-lg font-bold text-cyan-300 mb-1">
+                    {detectionArea}
+                  </div>
+                  <span className="text-xs font-mono text-slate-400">
+                    Backend-provided area
+                  </span>
+                </div>
 
-            {/* CARD 3: Confidence */}
-            <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
-                Confidence
-              </span>
-              <div className="text-lg font-bold text-emerald-400 mb-1">
-                {detectionConfidence}
-              </div>
-              <span className="text-xs font-mono text-slate-400">
-                Backend-provided confidence
-              </span>
-            </div>
+                {/* CARD 3: Confidence */}
+                <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
+                    Confidence
+                  </span>
+                  <div className="text-lg font-bold text-emerald-400 mb-1">
+                    {detectionConfidence}
+                  </div>
+                  <span className="text-xs font-mono text-slate-400">
+                    Backend-provided confidence
+                  </span>
+                </div>
+              </>
+            )}
 
             {/* CHANGE DETECTION CARD */}
             {changePercentage !== undefined && (
