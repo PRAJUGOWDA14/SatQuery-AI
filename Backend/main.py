@@ -135,7 +135,7 @@ async def analyze(
     elif analysis_type == "Object Detection":
         task = "object_detection"
     elif analysis_type == "Land Cover Analysis":
-        task = "land_cover_unavailable"
+        task = "land_cover_analysis"
     elif analysis_type == "Spectral Analysis":
         task = "spectral_analysis_unavailable"
     else:
@@ -243,12 +243,42 @@ For each object type, briefly describe where it appears in the image."""
         )
 
 
-    elif task == "land_cover_unavailable":
+    elif task == "land_cover_analysis":
 
-        answer = (
-            "Land cover analysis is not implemented "
-            "in the current backend yet."
-        )
+        try:
+            answer = analyze_image_with_gemini(
+                file_path,
+                """Analyze this satellite image for land cover classification.
+
+Identify the major land-cover classes that are clearly visible, such as:
+- water
+- vegetation/forest
+- agricultural land
+- built-up/urban areas
+- roads
+- bare land or other visible surfaces
+
+Give a concise summary of the major land-cover classes and where they appear.
+Do not invent classes that are not clearly visible."""
+            )
+
+            answer = (
+                f"{answer}\\n\\n"
+                f"Image-processing estimates: "
+                f"vegetation {analysis['vegetation_percentage']}%, "
+                f"water {analysis['water_percentage']}%, "
+                f"built-up/other {analysis['builtup_percentage']}%."
+            )
+
+        except Exception as e:
+            print(f"Gemini land cover error: {e}")
+
+            answer = (
+                f"Land cover estimates: "
+                f"vegetation {analysis['vegetation_percentage']}%, "
+                f"water {analysis['water_percentage']}%, "
+                f"built-up/other {analysis['builtup_percentage']}%."
+            )
 
 
     elif task == "spectral_analysis_unavailable":

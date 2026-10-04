@@ -172,7 +172,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         if (analysisType === 'Auto Detect') {
           summary = `Water: ${analysisData.water_percentage.toFixed(2)}% • Built-up: ${analysisData.builtup_percentage.toFixed(2)}% • Vegetation: ${analysisData.vegetation_percentage.toFixed(2)}% • Bright areas: ${analysisData.bright_area_percentage.toFixed(2)}%`;
         } else if (analysisType === 'Land Cover Analysis') {
-          summary = `Water: ${analysisData.water_percentage.toFixed(2)}% • Built-up: ${analysisData.builtup_percentage.toFixed(2)}% • Vegetation: ${analysisData.vegetation_percentage.toFixed(2)}% • Bright areas: ${analysisData.bright_area_percentage.toFixed(2)}%`;
+          summary = backendData?.answer || backendData?.summary || summary;
         } else if (analysisType === 'Object Detection' || analysisType === 'Visual Question Answering' || analysisType === 'Spectral Analysis' || analysisType === 'Change Detection') {
           summary = backendData?.answer || backendData?.summary || summary;
         }
