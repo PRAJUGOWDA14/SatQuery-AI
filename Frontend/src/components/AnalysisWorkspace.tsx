@@ -456,7 +456,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                   </div>
                 ) : (
                   <div>
-                    <div className="relative w-full aspect-[16/9] bg-slate-950 flex items-center justify-center overflow-hidden">
+                    <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] bg-slate-950 flex items-center justify-center overflow-hidden border-b border-white/10">
                       <img
                         src={afterImage.previewUrl}
                         alt={afterImage.filename}
