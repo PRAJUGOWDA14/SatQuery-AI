@@ -71,6 +71,7 @@ def health():
 @app.post("/api/analyze")
 async def analyze(
     image: UploadFile = File(...),
+    after_image: UploadFile | None = File(None),
     query: str = Form(...),
     analysis_type: str = Form("Auto Detect")
 ):
@@ -115,6 +116,14 @@ async def analyze(
         buffer.write(
             await image.read()
         )
+
+    after_file_path = None
+    if after_image is not None:
+        after_extension = os.path.splitext(after_image.filename or "")[1]
+        after_filename = f"{uuid.uuid4()}{after_extension}"
+        after_file_path = os.path.join(UPLOAD_DIR, after_filename)
+        with open(after_file_path, "wb") as buffer:
+            buffer.write(await after_image.read())
 
     # Decide which analysis the user requested
     if analysis_type == "Auto Detect":
@@ -166,10 +175,24 @@ async def analyze(
 
     elif task == "change_detection":
 
-        answer = (
-            "Change detection requires a before image and an after image. "
-            "Use the change-detection analysis with two images."
-        )
+        if not after_file_path:
+            answer = (
+                "Change detection requires a before image and an after image. "
+                "Please upload both images."
+            )
+        else:
+            output_filename = f"{uuid.uuid4()}_change.png"
+            output_path = os.path.join(UPLOAD_DIR, output_filename)
+
+            change_result = detect_change(
+                file_path,
+                after_file_path,
+                output_path
+            )
+
+            answer = (
+                f"Change detected across {change_result['change_percentage']}% of the image."
+            )
 
 
     elif task == "area_analysis":
@@ -254,7 +277,7 @@ For each object type, briefly describe where it appears in the image."""
             )
 
 
-    return {
+    response_data = {
         "success": True,
         "task": task,
         "query": query,
@@ -264,6 +287,14 @@ For each object type, briefly describe where it appears in the image."""
             f"/uploads/{filename}"
         )
     }
+
+    if task == "change_detection" and after_file_path:
+        response_data["overlay_url"] = f"/uploads/{output_filename}"
+        response_data["change_percentage"] = change_result["change_percentage"]
+        response_data["changed_pixels"] = change_result["changed_pixels"]
+        response_data["total_pixels"] = change_result["total_pixels"]
+
+    return response_data
 
 
 @app.post("/api/change-detection")

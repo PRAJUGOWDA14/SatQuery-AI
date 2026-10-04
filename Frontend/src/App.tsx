@@ -36,6 +36,7 @@ export default function App() {
 
   // Analysis Workspace shared state for backend dispatch
   const [uploadedImage, setUploadedImage] = useState<UploadedImageData | null>(null);
+  const [afterImage, setAfterImage] = useState<UploadedImageData | null>(null);
   const [query, setQuery] = useState<string>('');
   const [analysisType, setAnalysisType] = useState<AnalysisType>('Auto Detect');
   const [latestResult, setLatestResult] = useState<FinalAnalysisResult | null>(null);
@@ -98,6 +99,8 @@ export default function App() {
           <AnalysisWorkspace
             uploadedImage={uploadedImage}
             setUploadedImage={setUploadedImage}
+            afterImage={afterImage}
+            setAfterImage={setAfterImage}
             query={query}
             setQuery={setQuery}
             analysisType={analysisType}
@@ -109,6 +112,7 @@ export default function App() {
         {currentTab === 'analysis/loading' && (
           <AnalysisLoadingView
             uploadedImage={uploadedImage}
+            afterImage={afterImage}
             query={query}
             analysisType={analysisType}
             onCancel={() => navigateTo('analyze')}

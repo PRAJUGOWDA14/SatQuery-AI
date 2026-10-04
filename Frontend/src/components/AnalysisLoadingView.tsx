@@ -17,6 +17,7 @@ import { analyzeImage, getAnalysisStatus, AnalyzeResponseData } from '../service
 
 interface AnalysisLoadingViewProps {
   uploadedImage: UploadedImageData | null;
+  afterImage: UploadedImageData | null;
   query: string;
   analysisType: AnalysisType;
   onCancel: () => void;
@@ -40,6 +41,7 @@ const PROCESSING_STEPS: StepItem[] = [
 
 export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
   uploadedImage,
+  afterImage,
   query,
   analysisType,
   onCancel,
@@ -80,6 +82,7 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
     if (uploadedImage) {
       analyzeImage({
         image: uploadedImage.file,
+        after_image: afterImage?.file,
         query,
         analysis_type: analysisType,
       })
@@ -249,6 +252,9 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         area_km2: backendData?.area_km2 ?? undefined,
         crs: backendData?.crs || backendData?.metadata?.crs || 'Not provided',
         overlayUrl: backendData?.overlay_url,
+        changePercentage: backendData?.change_percentage,
+        changedPixels: backendData?.changed_pixels,
+        totalPixels: backendData?.total_pixels,
         detections,
         metadata: {
           model: backendData?.metadata?.model || 'Basic Image Analysis Pipeline',

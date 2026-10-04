@@ -12,6 +12,8 @@ import changeSampleImg from '../assets/images/satellite_change_detection_1790235
 interface AnalysisWorkspaceProps {
   uploadedImage: UploadedImageData | null;
   setUploadedImage: (img: UploadedImageData | null) => void;
+  afterImage: UploadedImageData | null;
+  setAfterImage: (img: UploadedImageData | null) => void;
   query: string;
   setQuery: (q: string) => void;
   analysisType: AnalysisType;
@@ -22,6 +24,8 @@ interface AnalysisWorkspaceProps {
 export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
   uploadedImage,
   setUploadedImage,
+  afterImage,
+  setAfterImage,
   query,
   setQuery,
   analysisType,
@@ -32,6 +36,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const afterFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const analysisOptions: AnalysisType[] = [
     'Auto Detect',
@@ -101,6 +106,49 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
     img.src = previewUrl;
   };
 
+  // Process the After image for Change Detection
+  const processAfterSelectedFile = (file: File) => {
+    setValidationError(null);
+
+    const allowedExtensions = ['.tif', '.tiff', '.png', '.jpg', '.jpeg'];
+    const fileNameLower = file.name.toLowerCase();
+    const isValidFormat = allowedExtensions.some(ext => fileNameLower.endsWith(ext)) ||
+      file.type.startsWith('image/');
+
+    if (!isValidFormat) {
+      setValidationError('Unsupported file format. Please upload PNG, JPG, TIFF.');
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      setAfterImage({
+        file,
+        previewUrl,
+        filename: file.name,
+        width: img.naturalWidth || 1920,
+        height: img.naturalHeight || 1080,
+        sizeBytes: file.size,
+        formattedSize: formatFileSize(file.size),
+      });
+    };
+
+    img.onerror = () => {
+      setAfterImage({
+        file,
+        previewUrl,
+        filename: file.name,
+        width: 2048,
+        height: 2048,
+        sizeBytes: file.size,
+        formattedSize: formatFileSize(file.size),
+      });
+    };
+
+    img.src = previewUrl;
+  };
   // Drag and drop handlers
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -353,6 +401,113 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* After Image — Change Detection */}
+            {analysisType === 'Change Detection' && (
+              <div className="rounded-2xl glass-panel border border-white/15 overflow-hidden bg-[#0a1020]">
+                <div className="p-4 border-b border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">
+                        After Image
+                      </h3>
+                      <p className="text-xs text-slate-400 mt-1">
+                        Upload the later image to compare with the Before Image.
+                      </p>
+                    </div>
+
+                    {afterImage && (
+                      <span className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Image Ready
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {!afterImage ? (
+                  <div
+                    onClick={() => afterFileInputRef.current?.click()}
+                    className="p-8 flex flex-col items-center justify-center text-center cursor-pointer border-2 border-dashed border-white/15 hover:border-cyan-400/50 transition-all"
+                  >
+                    <input
+                      ref={afterFileInputRef}
+                      type="file"
+                      accept=".tif,.tiff,.png,.jpg,.jpeg,image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          processAfterSelectedFile(e.target.files[0]);
+                        }
+                      }}
+                      className="hidden"
+                    />
+
+                    <Upload className="w-8 h-8 text-cyan-400 mb-3" />
+
+                    <h4 className="text-sm font-semibold text-white">
+                      Upload After Image
+                    </h4>
+
+                    <p className="text-xs text-slate-400 mt-1">
+                      Click to browse PNG, JPG or TIFF
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="relative w-full aspect-[16/9] bg-slate-950 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={afterImage.previewUrl}
+                        alt={afterImage.filename}
+                        className="w-full h-full object-contain"
+                      />
+
+                      <div className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-mono text-cyan-300">
+                        {afterImage.width} × {afterImage.height} px
+                      </div>
+                    </div>
+
+                    <div className="p-4 flex items-center justify-between gap-3 bg-[#0d152a]">
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-white truncate">
+                          {afterImage.filename}
+                        </div>
+                        <div className="text-xs font-mono text-slate-400 mt-1">
+                          {afterImage.width} × {afterImage.height} · {afterImage.formattedSize}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => afterFileInputRef.current?.click()}
+                          className="px-3 py-1.5 rounded-lg border border-white/15 hover:border-cyan-400/50 bg-white/5 hover:bg-white/10 text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Replace</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (afterImage.previewUrl) {
+                              URL.revokeObjectURL(afterImage.previewUrl);
+                            }
+                            setAfterImage(null);
+                            if (afterFileInputRef.current) {
+                              afterFileInputRef.current.value = '';
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg border border-rose-500/30 hover:border-rose-500/60 bg-rose-500/10 hover:bg-rose-500/20 text-xs font-medium text-rose-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

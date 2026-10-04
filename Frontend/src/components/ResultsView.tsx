@@ -26,6 +26,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { FinalAnalysisResult, BackendDetection } from '../types';
+import { API_BASE_URL } from '../services/api';
 
 interface ResultsViewProps {
   result: FinalAnalysisResult | null;
@@ -89,9 +90,14 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
     areaText,
     locationText,
     overlayUrl,
+    changePercentage,
+    changedPixels,
+    totalPixels,
     detections = [],
     metadata,
   } = result;
+
+  const fullOverlayUrl = overlayUrl ? (overlayUrl.startsWith('http') ? overlayUrl : API_BASE_URL.replace('/api', '') + overlayUrl) : undefined;
 
   // Zoom helpers
   const handleZoomIn = () => setZoomLevel((prev) => Math.min(prev + 0.35, 3.5));
@@ -407,7 +413,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                   {/* Backend Provided Overlay URL (if returned) */}
                   {viewMode === 'overlay' && overlayUrl && (
                     <img
-                      src={overlayUrl}
+                      src={fullOverlayUrl}
                       alt="Backend Analysis Overlay"
                       className="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-80 mix-blend-screen"
                     />
@@ -781,6 +787,24 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                 Backend-provided confidence
               </span>
             </div>
+
+            {/* CHANGE DETECTION CARD */}
+            {changePercentage !== undefined && (
+              <div className="rounded-2xl p-5 glass-panel border border-orange-400/30 bg-[#0a1020] hover:border-orange-400/50 transition-colors shadow-lg">
+                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
+                  Change Detected
+                </span>
+                <div className="text-lg font-bold text-orange-300 mb-1">
+                  {changePercentage}%
+                </div>
+                <span className="text-xs font-mono text-slate-400 block">
+                  {changedPixels?.toLocaleString() ?? '—'} changed pixels
+                </span>
+                <span className="text-xs font-mono text-slate-500">
+                  of {totalPixels?.toLocaleString() ?? '—'} total pixels
+                </span>
+              </div>
+            )}
 
             {/* CARD 4: Coordinates */}
             <div 

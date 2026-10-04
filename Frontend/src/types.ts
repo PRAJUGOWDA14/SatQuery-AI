@@ -56,6 +56,9 @@ export interface BackendAnalysisResult {
   location?: string;
   crs?: string;
   overlay_url?: string;
+  change_percentage?: number;
+  changed_pixels?: number;
+  total_pixels?: number;
   analysis_type?: string;
   metadata?: BackendAnalysisMetadata;
   raw_response?: unknown;
@@ -78,6 +81,9 @@ export interface FinalAnalysisResult {
   area_km2?: number;
   crs?: string;
   overlayUrl?: string;
+  changePercentage?: number;
+  changedPixels?: number;
+  totalPixels?: number;
   detections: BackendDetection[];
   metadata: {
     model: string;

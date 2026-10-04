@@ -15,6 +15,7 @@ export type AnalysisType =
 
 export interface AnalyzeRequestPayload {
   image: File | Blob;
+  after_image?: File | Blob;
   query: string;
   analysis_type: AnalysisType;
 }
@@ -57,6 +58,9 @@ export interface AnalyzeResponseData {
   location?: string;
   crs?: string;
   overlay_url?: string;
+  change_percentage?: number;
+  changed_pixels?: number;
+  total_pixels?: number;
   metadata?: BackendAnalysisMetadata;
   raw_response?: unknown;
 }
@@ -75,6 +79,9 @@ export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 export async function analyzeImage(payload: AnalyzeRequestPayload): Promise<AnalyzeResponseData> {
   const formData = new FormData();
   formData.append('image', payload.image);
+  if (payload.after_image) {
+    formData.append('after_image', payload.after_image);
+  }
   formData.append('query', payload.query);
   formData.append('analysis_type', payload.analysis_type);
 
