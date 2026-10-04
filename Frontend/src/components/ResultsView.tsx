@@ -749,10 +749,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            {/* STANDARD ANALYSIS CARDS */}
-            {changePercentage === undefined && (
-              <>
-                {/* CARD 1: Detection */}
+            {/* CARD 1: Detection */}
                 <div className="rounded-2xl p-5 glass-panel border border-white/10 bg-[#0a1020] hover:border-cyan-400/40 transition-colors shadow-lg">
                   <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block mb-2">
                     Detection
@@ -790,9 +787,6 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
                     Backend-provided confidence
                   </span>
                 </div>
-              </>
-            )}
-
             {/* CHANGE DETECTION CARD */}
             {changePercentage !== undefined && (
               <div className="rounded-2xl p-5 glass-panel border border-orange-400/30 bg-[#0a1020] hover:border-orange-400/50 transition-colors shadow-lg">

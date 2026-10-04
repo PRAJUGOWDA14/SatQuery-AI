@@ -291,8 +291,32 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
               )}
             </div>
 
-            {/* Upload Area or Preview Area */}
-            {!uploadedImage ? (
+            {/* Image / Before Image */}
+            <div className="rounded-2xl glass-panel border border-white/15 overflow-hidden bg-[#0a1020]">
+              <div className="p-4 border-b border-white/10">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-white">
+                      {analysisType === 'Change Detection' ? 'Before Image' : 'Image'}
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-1">
+                      {analysisType === 'Change Detection'
+                        ? 'Upload the earlier image to compare with the After Image.'
+                        : 'Upload a satellite or remote-sensing image for analysis.'}
+                    </p>
+                  </div>
+
+                  {uploadedImage && (
+                    <span className="text-xs font-mono text-emerald-400 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Image Ready
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Upload Area or Preview Area */}
+              {!uploadedImage ? (
               <div
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -404,6 +428,8 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
               </div>
             )}
 
+            </div>
+
             {/* After Image — Change Detection */}
             {analysisType === 'Change Detection' && (
               <div className="rounded-2xl glass-panel border border-white/15 overflow-hidden bg-[#0a1020]">
@@ -430,7 +456,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                 {!afterImage ? (
                   <div
                     onClick={() => afterFileInputRef.current?.click()}
-                    className="p-8 flex flex-col items-center justify-center text-center cursor-pointer border-2 border-dashed border-white/15 hover:border-cyan-400/50 transition-all"
+                    className="p-8 sm:p-12 flex flex-col items-center justify-center text-center cursor-pointer min-h-[380px] border-2 border-dashed border-white/15 hover:border-cyan-400/50 transition-all"
                   >
                     <input
                       ref={afterFileInputRef}
@@ -468,13 +494,18 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
                       </div>
                     </div>
 
-                    <div className="p-4 flex items-center justify-between gap-3 bg-[#0d152a]">
-                      <div className="min-w-0">
-                        <div className="text-sm font-semibold text-white truncate">
-                          {afterImage.filename}
+                    <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#0d152a]">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <FileCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <div className="text-sm font-semibold text-white truncate">
+                            {afterImage.filename}
+                          </div>
                         </div>
-                        <div className="text-xs font-mono text-slate-400 mt-1">
-                          {afterImage.width} × {afterImage.height} · {afterImage.formattedSize}
+                        <div className="mt-1 flex items-center gap-3 text-xs font-mono text-slate-400">
+                          <span>Dimensions: {afterImage.width} × {afterImage.height}</span>
+                          <span>·</span>
+                          <span>Size: {afterImage.formattedSize}</span>
                         </div>
                       </div>
 
