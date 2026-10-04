@@ -193,7 +193,7 @@ export const ResultsView: React.FC<ResultsViewProps> = ({
 
   // Primary detection for Findings Section cards
   const primaryDetection = detections[0] || {};
-  const detectionLabel = primaryDetection.label || 'No detected feature provided by backend';
+  const detectionLabel = detectedObjectsText || primaryDetection.label || 'No detected feature provided by backend';
   const detectionArea = primaryDetection.area ? String(primaryDetection.area) : areaText;
   const detectionConfidence = primaryDetection.confidence !== undefined ? `${primaryDetection.confidence}%` : (confidence !== null ? `${confidence}%` : 'Not provided');
   const detectionCoordinates = primaryDetection.coordinates 

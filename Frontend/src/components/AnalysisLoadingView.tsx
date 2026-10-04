@@ -219,8 +219,16 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         }
       } else if (backendData?.detections && backendData.detections.length > 0) {
         detectedObjectsText = `Targets Identified: ${backendData.detections.length}`;
-      } else {
-        detectedObjectsText = 'No object detections provided by backend';
+      } else if ((analysisType === 'Object Detection' || backendData?.task === 'object_detection') && answer) {
+        const objectNames = [...answer.matchAll(/(?:\*\*|\\\*\\\*)\s*([^:*]+?)\s*(?::|\\\*\\\*:)/g)]
+          .map(match => match[1].trim())
+          .filter((name, index, names) => names.indexOf(name) === index);
+
+        if (objectNames.length > 0) {
+          detectedObjectsText = `${objectNames.length} object types detected: ${objectNames.join(', ')}`;
+        } else {
+          detectedObjectsText = 'Objects detected — see SatQuery Response for details';
+        }
       }
 
       // Detections array with overlays (bounding boxes, masks, points, highlights)
