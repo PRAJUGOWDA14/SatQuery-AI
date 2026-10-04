@@ -222,6 +222,24 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
         }
       } else if (backendData?.detections && backendData.detections.length > 0) {
         detectedObjectsText = `Targets Identified: ${backendData.detections.length}`;
+      } else if (analysisType === 'Land Cover Analysis' && answer) {
+        const landCoverPatterns = [
+          { label: 'Water', keywords: ['water', 'river', 'ocean', 'lake', 'river networks'] },
+          { label: 'Vegetation/Forest', keywords: ['vegetation', 'forest', 'mangrove', 'sundarbans'] },
+          { label: 'Agricultural Land', keywords: ['agricultural land', 'agriculture', 'farmland', 'farm', 'farmed plots'] },
+          { label: 'Built-up/Urban Areas', keywords: ['built-up', 'built up', 'urban areas', 'urban', 'urban sprawl'] },
+          { label: 'Bare Land / Other Surfaces', keywords: ['bare land', 'exposed earth', 'exposed soil', 'sparse vegetation'] },
+        ];
+
+        const landCoverClasses = landCoverPatterns
+          .filter(item => item.keywords.some(keyword => answer.toLowerCase().includes(keyword)))
+          .map(item => item.label);
+
+        if (landCoverClasses.length > 0) {
+          detectedObjectsText = `Land-cover classes: ${landCoverClasses.join(', ')}`;
+        } else {
+          detectedObjectsText = 'Land-cover classes identified — see SatQuery Response for details';
+        }
       } else if ((analysisType === 'Object Detection' || backendData?.task === 'object_detection') && answer) {
         const objectNames = [...answer.matchAll(/(?:\*\*|\\\*\\\*)\s*([^:*]+?)\s*(?::|\\\*\\\*:)/g)]
           .map(match => match[1].trim())
