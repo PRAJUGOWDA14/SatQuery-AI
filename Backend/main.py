@@ -73,7 +73,8 @@ async def analyze(
     image: UploadFile = File(...),
     after_image: UploadFile | None = File(None),
     query: str = Form(...),
-    analysis_type: str = Form("Auto Detect")
+    analysis_type: str = Form("Auto Detect"),
+    gsd: float | None = Form(None)
 ):
 
     if not image.content_type:
@@ -197,11 +198,25 @@ async def analyze(
 
     elif task == "area_analysis":
 
-        answer = (
-            "Area estimation requires the ground "
-            "resolution or geospatial metadata "
-            "of the satellite image."
-        )
+        if gsd is None or gsd <= 0:
+            answer = (
+                "Area estimation requires the ground "
+                "resolution (GSD) of the satellite image. "
+                "Please provide the image resolution in metres per pixel."
+            )
+        else:
+            total_pixels = analysis["total_pixels"]
+            area_m2 = total_pixels * (gsd ** 2)
+            area_km2 = area_m2 / 1_000_000
+            area_acres = area_m2 / 4046.8564224
+            area_guntas = area_acres * 40
+
+            answer = (
+                f"Estimated total area: {area_km2:.4f} km², "
+                f"{area_acres:.2f} acres, "
+                f"{area_guntas:.2f} guntas "
+                f"(GSD: {gsd:g} m/pixel)."
+            )
 
 
     elif task == "vqa_unavailable":
@@ -317,6 +332,13 @@ Do not invent classes that are not clearly visible."""
             f"/uploads/{filename}"
         )
     }
+
+    if task == "area_analysis" and gsd is not None and gsd > 0:
+        response_data["area_km2"] = area_km2
+        response_data["area_acres"] = area_acres
+        response_data["area_guntas"] = area_guntas
+        response_data["gsd_m_per_pixel"] = gsd
+        response_data["area"] = {"value": round(area_km2, 4), "unit": "km²"}
 
     if task == "change_detection" and after_file_path:
         response_data["overlay_url"] = f"/uploads/{output_filename}"

@@ -52,6 +52,9 @@ export interface AnalyzeResponseData {
   detected_objects?: Record<string, number> | string | number;
   area?: string | { value: number; unit: string } | number;
   area_km2?: number;
+  area_acres?: number;
+  area_guntas?: number;
+  gsd_m_per_pixel?: number;
   latitude?: number;
   longitude?: number;
   coordinates?: string | { lat: number; lng: number };
@@ -84,6 +87,7 @@ export async function analyzeImage(payload: AnalyzeRequestPayload): Promise<Anal
   }
   formData.append('query', payload.query);
   formData.append('analysis_type', payload.analysis_type);
+  formData.append('gsd', '10');
 
   try {
     const response = await fetch(`${API_BASE_URL}/analyze`, {

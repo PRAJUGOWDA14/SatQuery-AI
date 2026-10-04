@@ -189,10 +189,13 @@ export const AnalysisLoadingView: React.FC<AnalysisLoadingViewProps> = ({
       }
 
       // Format area
-      let areaText = 'Not available — image has no geospatial scale';
-      if (backendData?.area) {
-        if (typeof backendData.area === 'object' && 'value' in backendData.area) {
-          areaText = `${backendData.area.value} ${backendData.area.unit || 'km²'}`;
+      let areaText = "Not available — image has no geospatial scale";
+      if (backendData?.area_acres !== undefined && backendData?.area_guntas !== undefined) {
+        const km2 = backendData.area_km2 ?? null;
+        areaText = (km2 !== null ? String(km2) + " km², " : "") + Number(backendData.area_acres).toFixed(2) + " acres, " + Number(backendData.area_guntas).toFixed(2) + " guntas";
+      } else if (backendData?.area) {
+        if (typeof backendData.area === "object" && "value" in backendData.area) {
+          areaText = String(backendData.area.value) + " " + (backendData.area.unit || "km²");
         } else {
           areaText = String(backendData.area);
         }

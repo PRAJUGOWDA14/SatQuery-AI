@@ -50,6 +50,9 @@ export interface BackendAnalysisResult {
   detected_objects?: Record<string, number> | string | number;
   area?: string | { value: number; unit: string } | number;
   area_km2?: number;
+  area_acres?: number;
+  area_guntas?: number;
+  gsd_m_per_pixel?: number;
   latitude?: number;
   longitude?: number;
   coordinates?: string | { lat: number; lng: number };
@@ -79,6 +82,9 @@ export interface FinalAnalysisResult {
   latitude?: number;
   longitude?: number;
   area_km2?: number;
+  area_acres?: number;
+  area_guntas?: number;
+  gsd_m_per_pixel?: number;
   crs?: string;
   overlayUrl?: string;
   changePercentage?: number;
