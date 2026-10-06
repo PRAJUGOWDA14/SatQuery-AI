@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from services.router import route_query
-from services.image_analysis import analyze_image
+from services.image_analysis import analyze_image, spectral_proxy_analysis
 from services.gemini_service import analyze_image_with_gemini
 from services.change_detection import detect_change
 
@@ -138,7 +138,7 @@ async def analyze(
     elif analysis_type == "Land Cover Analysis":
         task = "land_cover_analysis"
     elif analysis_type == "Spectral Analysis":
-        task = "spectral_analysis_unavailable"
+        task = "spectral_analysis"
     else:
         task = route_query(query)
 
@@ -296,11 +296,21 @@ Do not invent classes that are not clearly visible."""
             )
 
 
-    elif task == "spectral_analysis_unavailable":
+    elif task == "spectral_analysis":
+
+        spectral = spectral_proxy_analysis(file_path)
 
         answer = (
-            "Spectral analysis is not implemented "
-            "in the current backend yet."
+            "RGB-derived spectral proxy analysis:\n"
+            f"Red mean: {spectral['red_mean']}\n"
+            f"Green mean: {spectral['green_mean']}\n"
+            f"Blue mean: {spectral['blue_mean']}\n"
+            f"Red fraction: {spectral['red_fraction']}\n"
+            f"Green fraction: {spectral['green_fraction']}\n"
+            f"Blue fraction: {spectral['blue_fraction']}\n"
+            f"Vegetation proxy: {spectral['vegetation_proxy_mean']}\n"
+            f"Water proxy: {spectral['water_proxy_mean']}\n\n"
+            f"{spectral['note']}"
         )
 
 
