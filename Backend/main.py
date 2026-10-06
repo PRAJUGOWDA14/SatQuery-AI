@@ -139,6 +139,8 @@ async def analyze(
         task = "land_cover_analysis"
     elif analysis_type == "Spectral Analysis":
         task = "spectral_analysis"
+    elif analysis_type == "SAR Analysis":
+        task = "sar_analysis"
     else:
         task = route_query(query)
 

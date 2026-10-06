@@ -6,7 +6,8 @@ export type AnalysisType =
   | 'Object Detection'
   | 'Change Detection'
   | 'Land Cover Analysis'
-  | 'Spectral Analysis';
+  | 'Spectral Analysis'
+  | 'SAR Analysis';
 
 export interface BackendProcessingStatus {
   status: 'processing' | 'completed' | 'failed';

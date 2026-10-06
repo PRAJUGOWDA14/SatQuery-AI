@@ -45,6 +45,7 @@ export const AnalysisWorkspace: React.FC<AnalysisWorkspaceProps> = ({
     'Change Detection',
     'Land Cover Analysis',
     'Spectral Analysis',
+    'SAR Analysis',
   ];
 
   const exampleChips = [
