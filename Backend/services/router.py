@@ -11,6 +11,18 @@ def route_query(query: str) -> str:
         return "change_detection"
 
     if any(word in q for word in [
+        "sar",
+        "synthetic aperture radar",
+        "radar image",
+        "radar imagery",
+        "backscatter",
+        "speckle",
+        "vessel detection",
+        "ship detection"
+    ]):
+        return "sar_analysis"
+
+    if any(word in q for word in [
         "built up area",
         "built-up area",
         "builtup area",

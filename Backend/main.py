@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from services.router import route_query
-from services.image_analysis import analyze_image, spectral_proxy_analysis
+from services.image_analysis import analyze_image, spectral_proxy_analysis, sar_image_analysis
 from services.gemini_service import analyze_image_with_gemini
 from services.change_detection import detect_change
 
@@ -294,6 +294,21 @@ Do not invent classes that are not clearly visible."""
                 f"water {analysis['water_percentage']}%, "
                 f"built-up/other {analysis['builtup_percentage']}%."
             )
+
+
+    elif task == "sar_analysis":
+
+        sar = sar_image_analysis(file_path)
+
+        answer = (
+            "SAR image interpretation:\n"
+            f"Mean intensity: {sar['mean_intensity']}\n"
+            f"Intensity variation: {sar['intensity_std']}\n"
+            f"Bright target percentage: {sar['bright_target_percentage']}%\n"
+            f"Dark region percentage: {sar['dark_region_percentage']}%\n"
+            f"Dynamic range: {sar['dynamic_range']}\n\n"
+            f"{sar['note']}"
+        )
 
 
     elif task == "spectral_analysis":

@@ -114,3 +114,47 @@ def spectral_proxy_analysis(image_path: str):
             "True NDVI and multispectral indices require a dedicated NIR band."
         )
     }
+
+
+def sar_image_analysis(image_path: str):
+    """
+    Prototype SAR image interpretation for rendered SAR/Radar images.
+
+    This analyzes image intensity and texture. It does NOT calculate
+    calibrated physical SAR backscatter such as Sigma-0.
+    """
+
+    image = Image.open(image_path).convert("L")
+    img = np.array(image).astype(float)
+
+    mean_intensity = float(np.mean(img))
+    std_intensity = float(np.std(img))
+
+    bright_threshold = np.percentile(img, 90)
+    dark_threshold = np.percentile(img, 10)
+
+    bright_mask = img >= bright_threshold
+    dark_mask = img <= dark_threshold
+
+    bright_percentage = (
+        np.sum(bright_mask) / img.size
+    ) * 100
+
+    dark_percentage = (
+        np.sum(dark_mask) / img.size
+    ) * 100
+
+    return {
+        "mean_intensity": round(mean_intensity, 2),
+        "intensity_std": round(std_intensity, 2),
+        "bright_target_percentage": round(bright_percentage, 2),
+        "dark_region_percentage": round(dark_percentage, 2),
+        "dynamic_range": round(
+            float(np.max(img) - np.min(img)), 2
+        ),
+        "note": (
+            "SAR image interpretation based on rendered image intensity "
+            "and texture. Calibrated Sigma-0/backscatter requires original "
+            "SAR data and sensor calibration metadata."
+        )
+    }
